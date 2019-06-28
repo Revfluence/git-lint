@@ -73,25 +73,21 @@ def lint_command(name, program, arguments, filter_regex, filename, lines):
 
     Returns: dict: a dict with the extracted info from the message.
     """
-    output = utils.get_output_from_cache(name, filename)
-
-    if output is None:
-        call_arguments = [program] + arguments + [filename]
-        try:
-            output = subprocess.check_output(
-                call_arguments, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as error:
-            output = error.output
-        except OSError:
-            return {
-                filename: {
-                    'error': [('Could not execute "%s".%sMake sure all ' +
-                               'required programs are installed') %
-                              (' '.join(call_arguments), os.linesep)]
-                }
+    call_arguments = [program] + arguments + [filename]
+    try:
+        output = subprocess.check_output(
+            call_arguments, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as error:
+        output = error.output
+    except OSError:
+        return {
+            filename: {
+                'error': [('Could not execute "%s".%sMake sure all ' +
+                           'required programs are installed') %
+                          (' '.join(call_arguments), os.linesep)]
             }
-        output = output.decode('utf-8')
-        utils.save_output_in_cache(name, filename, output)
+        }
+    output = output.decode('utf-8')
 
     output_lines = output.split(os.linesep)
 
