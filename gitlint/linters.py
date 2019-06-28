@@ -143,14 +143,14 @@ def parse_yaml_config(yaml_config, repo_home):
             data.get('requirements', []), variables)
         arguments = _replace_variables(data.get('arguments', []), variables)
 
-        not_found_programs = utils.programs_not_in_path([command] +
-                                                        requirements)
-        if not_found_programs:
-            linter_command = Partial(missing_requirements_command,
-                                     not_found_programs, data['installation'])
-        else:
-            linter_command = Partial(lint_command, name, command, arguments,
-                                     data['filter'])
+        # not_found_programs = utils.programs_not_in_path([command] +
+        #                                                 requirements)
+        # if not_found_programs:
+        #     linter_command = Partial(missing_requirements_command,
+        #                              not_found_programs, data['installation'])
+        # else:
+        linter_command = Partial(lint_command, name, command, arguments,
+                                 data['filter'])
         for extension in data['extensions']:
             config[extension].append(linter_command)
 
